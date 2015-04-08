@@ -40,6 +40,7 @@ function pitch(degrees) {
 function yaw(degrees) {
     var yaw_func;
     var yaw_speed;
+
     if (Math.abs(degrees) < YAW_TOLERANCE) {
         return;
     }
@@ -57,23 +58,35 @@ function yaw(degrees) {
         }
         yaw_func = client.counterClockwise;
     }
+
     yaw_speed = Math.abs(Math.sin(degrees));
     yaw_func(yaw_speed);
-    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed,degree))
+    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degree))
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
 function roll(degrees) {   
-    if (degrees > MAX_ROLL) {
-        degrees = MAX_ROLL;
-        console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));
+    var roll_func;
+    var roll_speed;
+
+    if (degrees > 0){
+        if (degrees > MAX_ROLL) {
+            degrees = MAX_ROLL;
+            console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));       
+        }
+        roll_func = client.back;
     }
-    else if (degrees < MIN_ROLL) {
-        degrees = MIN_ROLL;
-        console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
+    else {
+        if (degrees < MIN_ROLL) {
+            degrees = MIN_ROLL;
+            console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
+        }
+        roll_func = client.back;
     }
-    console.log("CMD: roll {0}deg.".format(degree));
-    //TODO call roll
+
+    roll_speed = Math.abs(Math.sin(degrees));
+    roll_func(roll_speed);
+    console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degree));
 }
 
 //on keypress "w"
