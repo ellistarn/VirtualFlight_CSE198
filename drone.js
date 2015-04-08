@@ -18,9 +18,7 @@ MIN_ROLL = -30;
 YAW_TOLERANCE = 10;
 
 //defines a fixed climb speed to be used with ascend and descend. [0,1]
-CLIMB_SPEED = 
-//defines the length of time ascend/descend will modify the height. [0,inf]sec
-CLIMB_PERIOD = 1
+CLIMB_SPEED = 1
 
 //takes a value between MIN_PITCH & MAX_PITCH and sends command to drone.
 function pitch(degrees) {
@@ -40,47 +38,60 @@ function pitch(degrees) {
 //translates degrees from OR to speed for parrot API
 //must overcome YAW_TOLERANCE to generate movement commands.
 function yaw(degrees) {
+    var yaw_func;
+    var yaw_speed;
     if (Math.abs(degrees) < YAW_TOLERANCE) {
         return;
     }
-
-    if (degrees > MAX_YAW) {
-        degrees = MAX_YAW;
-        console.log("WARNING: limiting yaw from {0} to {1}".format(degrees,MAX_YAW))
+    if (degrees > 0) {
+        if (degrees > MAX_YAW) {
+            degrees = MAX_YAW;
+            console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MAX_YAW));
+        }
+        yaw_func = client.clockwise;
+    } 
+    else {
+        if (degrees < MIN_YAW) {
+            degrees = MIN_YAW;
+            console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW))
+        }
+        yaw_func = client.counterClockwise;
     }
-    else if (degrees < MIN_YAW) {
-        degrees = MIN_YAW;
-        console.log("WARNING: limiting yaw from {0} to {1}".format(degrees,MIN_YAW))
-    }
-    console.log("CMD: yaw {0}deg".format(degree))
-
-    //TODO map degrees to YAW SPEED
-    //TODO call yaw
+    yaw_speed = Math.abs(Math.sin(degrees));
+    yaw_func(yaw_speed);
+    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed,degree))
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
 function roll(degrees) {   
     if (degrees > MAX_ROLL) {
         degrees = MAX_ROLL;
-        console.log("WARNING: limiting roll from {0} to {1}".format(degrees,MAX_ROLL))
+        console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));
     }
     else if (degrees < MIN_ROLL) {
         degrees = MIN_ROLL;
-        console.log("WARNING: limiting roll from {0} to {1}".format(degrees,MIN_ROLL))
+        console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
     }
-    console.log("CMD: roll {0}deg".format(degree))
+    console.log("CMD: roll {0}deg.".format(degree));
     //TODO call roll
 }
 
-//symmetric unary function 
+//on keypress "w"
 function ascend() {
-    console.log("CMD: ascend at speed {0} for {1} sec".format(CLIMB_SPEED,CLIMB_PERIOD))
-    //TODO call up()
+    console.log("CMD: ascend at speed {0}.".format(CLIMB_SPEED));
+    client.up(CLIMB_SPEED);
 }
 
+//on keypress "s"
 function descend() {
-    console.log("CMD: ascend at speed {0} for {1} sec".format(CLIMB_SPEED,CLIMB_PERIOD))
-    //TODO call down()
+    console.log("CMD: descend at speed {0}.".format(CLIMB_SPEED));
+    client.down(CLIMB_SPEED);
+}
+
+//on keyrelease w or s
+function hold_height() {
+    console.log("CMD: stop climbing or descending.");
+    client.up(0);
 }
 
 //Ctor
