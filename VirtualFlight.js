@@ -1,5 +1,9 @@
-var arDrone = require('ar-drone');
-var client = arDrone.createClient();
+//Main driver for the Virtual Flight application
+
+require("./drone.js");
+require("./oculus.js");
+
+
 
 
 function VF_init_video_stream(client) {
@@ -18,15 +22,10 @@ function VF_land() {
     this.land();
 }
 
-// function VF_delay(client, delay) {
-//   console.log("Paused");
-//   client.after(delay, function() { console.log("Resumed")});
-// }
+//This function streams commands from the oculus rift device and calls the drone object
+function create_command_stream() {
 
-
-// VF_takeoff(client);
-// VF_takeoff();
-// client.after(5000, VF_land);
+}
 
 
 client.takeoff();
