@@ -1,5 +1,8 @@
 //This module serves as the main control between 
 //drove API flight commands and the Virtual Flight driver
+var arDrone = require('ar-drone');
+var client = arDrone.createClient();
+
 
 //degree limiters. [-90,90]deg
 MAX_PITCH = 30;
@@ -34,6 +37,7 @@ function pitch(degrees) {
 }
 
 //takes a value between MIN_YAW & MAX_YAW and sends command to drone.
+//translates degrees from OR to speed for parrot API
 //must overcome YAW_TOLERANCE to generate movement commands.
 function yaw(degrees) {
     if (Math.abs(degrees) < YAW_TOLERANCE) {
@@ -49,6 +53,8 @@ function yaw(degrees) {
         console.log("WARNING: limiting yaw from {0} to {1}".format(degrees,MIN_YAW))
     }
     console.log("CMD: yaw {0}deg".format(degree))
+
+    //TODO map degrees to YAW SPEED
     //TODO call yaw
 }
 
@@ -68,17 +74,19 @@ function roll(degrees) {
 
 //symmetric unary function 
 function ascend() {
-
+    console.log("CMD: ascend at speed {0} for {1} sec".format(CLIMB_SPEED,CLIMB_PERIOD))
+    //TODO call up()
 }
 
 function descend() {
-    
+    console.log("CMD: ascend at speed {0} for {1} sec".format(CLIMB_SPEED,CLIMB_PERIOD))
+    //TODO call down()
 }
 
 //Ctor
 var drone = function () {
-    var arDrone = require('ar-drone');
-    this.client = arDrone.createClient();
+    this.drone = drone;
+    this.client = client;
 
     this.pitch = pitch;
     this.yaw = yaw;
