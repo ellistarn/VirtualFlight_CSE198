@@ -18,20 +18,31 @@ MIN_ROLL = -30;
 YAW_TOLERANCE = 10;
 
 //defines a fixed climb speed to be used with ascend and descend. [0,1]
-CLIMB_SPEED = 1
+CLIMB_SPEED = .25
 
 //takes a value between MIN_PITCH & MAX_PITCH and sends command to drone.
 function pitch(degrees) {
-    if (degrees > MAX_PITCH) {
-        degrees = MAX_PITCH;
-        console.log("WARNING: limiting pitch from {0} to {1}".format(degrees,MAX_PITCH))
+    var pitch_func;
+    var pitch_speed;
+
+    if (degrees > 0) {
+        if (degrees > MAX_PITCH) {
+            degrees = MAX_PITCH;
+            console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MAX_PITCH));
+        } 
+        pitch_func = client.forward;       
     }
-    else if (degrees < MIN_PITCH) {
-        degrees = MIN_PITCH;
-        console.log("WARNING: limiting pitch from {0} to {1}".format(degrees,MIN_PITCH))
+    else {
+        if (degrees < MIN_PITCH) {
+            degrees = MIN_PITCH;
+            console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MIN_PITCH));
+        }
+        pitch_func = client.back;
     }
-    console.log("CMD: pitch {0}deg".format(degree))
-    //TODO call pitch
+
+    pitch_speed = Math.abs(Math.sin(degrees));
+    pitch_func(pitch_speed);
+    console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degree));
 }
 
 //takes a value between MIN_YAW & MAX_YAW and sends command to drone.
@@ -54,14 +65,14 @@ function yaw(degrees) {
     else {
         if (degrees < MIN_YAW) {
             degrees = MIN_YAW;
-            console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW))
+            console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW));
         }
         yaw_func = client.counterClockwise;
     }
 
     yaw_speed = Math.abs(Math.sin(degrees));
     yaw_func(yaw_speed);
-    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degree))
+    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degree));
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
@@ -74,14 +85,14 @@ function roll(degrees) {
             degrees = MAX_ROLL;
             console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));       
         }
-        roll_func = client.back;
+        roll_func = client.left;
     }
     else {
         if (degrees < MIN_ROLL) {
             degrees = MIN_ROLL;
             console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
         }
-        roll_func = client.back;
+        roll_func = client.right;
     }
 
     roll_speed = Math.abs(Math.sin(degrees));
@@ -101,21 +112,73 @@ function descend() {
     client.down(CLIMB_SPEED);
 }
 
-//on keyrelease w or s
+//on keyrelease "w" or "s"
 function hold_height() {
     console.log("CMD: stop climbing or descending.");
     client.up(0);
 }
 
+//on keypress "space"
+function toggle_hover() {
+    if (!this.hovering) {
+        console.log("CMD: hover.");
+        client.stop();
+    }
+    console.log("CMD: stop hovering.");
+    this.hovering = !this.hovering;
+}
+
+//on keyhold "space"?
+function takeoff() {
+    if(!this.flying) {
+        console.log("CMD: taking off.");
+        this.taking_off = true;
+    }
+    console.log("WARNING: already flying.");
+}
+
+//on keyhold "space"?
+function land() {
+    if(this.landing) {
+        console.log("CMD: landing.")
+        this.landing = true;
+    }
+}
+
+
+function video_stream(client) {
+    var pngStream = client.getPngStream();
+    pngStream.on('data', console.log);
+    return pngStream;
+}
+
 //Ctor
-var drone = function () {
-    this.drone = drone;
-    this.client = client;
+var drone = {
+    //functions
 
     this.pitch = pitch;
     this.yaw = yaw;
     this.roll = roll;
+
+    this.ascend = ascend;
+    this.descend = descend;
+    this.hold_height = hold_height;
+
+    this.toggle_hover = toggle_hover;
+
+    this.takeoff = takeoff;
+    this.land = land;
+
+    this.video_stream = video_stream;
+
+    //variables
+    this.client = client;
+    this.hovering = false;
+    this.flying = false;
+    this.taking_off = false;
+    this.landing = false;
 }
 
 //Returns a client object
 module.exports = drone;
+
