@@ -8,7 +8,7 @@ var flying = false;
 var taking_off = false;
 var landing = false;
 
-//degree limiters. [-90,90]deg
+//degrees limiters. [-90,90]deg
 MAX_PITCH = 30;
 MIN_PITCH = -30;
 
@@ -33,20 +33,20 @@ function pitch(degrees) {
         if (degrees > MAX_PITCH) {
             console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MAX_PITCH));
             degrees = MAX_PITCH;
-        } 
-        pitch_func = client.forward;       
+        }
+        pitch_speed = Math.abs(Math.sinDeg(degrees));
+        client.front(pitch_speed);
+        console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degrees));
     }
     else {
         if (degrees < MIN_PITCH) {
             console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MIN_PITCH));
             degrees = MIN_PITCH;
         }
-        pitch_func = client.back;
+        pitch_speed = Math.abs(Math.sinDeg(degrees));
+        client.back(pitch_speed);
+        console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degrees));
     }
-
-    pitch_speed = Math.abs(Math.sinDeg(degrees));
-    pitch_func(pitch_speed);
-    console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degree));
 }
 
 //takes a value between MIN_YAW & MAX_YAW and sends command to drone.
@@ -89,19 +89,19 @@ function roll(degrees) {
             console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));       
             degrees = MAX_ROLL;
         }
-        roll_func = client.left;
+        roll_speed = Math.abs(Math.sinDeg(degrees));
+        client.right(roll_speed);
+        console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degrees));        
     }
     else {
         if (degrees < MIN_ROLL) {
             console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
             degrees = MIN_ROLL;
         }
-        roll_func = client.right;
+        roll_speed = Math.abs(Math.sinDeg(degrees));
+        client.left(roll_speed);
+        console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degrees));
     }
-
-    roll_speed = Math.abs(Math.sinDeg(degrees));
-    roll_func(roll_speed);
-    console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degree));
 }
 
 //on keypress "w"
