@@ -44,7 +44,7 @@ function pitch(degrees) {
         pitch_func = client.back;
     }
 
-    pitch_speed = Math.abs(Math.sin(degrees));
+    pitch_speed = Math.abs(sinDeg(degrees));
     pitch_func(pitch_speed);
     console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degree));
 }
@@ -64,7 +64,7 @@ function yaw(degrees) {
             console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MAX_YAW));
             degrees = MAX_YAW;
         }
-        yaw_speed = Math.abs(Math.sin(degrees));
+        yaw_speed = Math.abs(sinDeg(degrees));
         client.clockwise(yaw_speed);
         console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
     } 
@@ -73,7 +73,7 @@ function yaw(degrees) {
             console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW));
             degrees = MIN_YAW;
         }
-        yaw_speed = Math.abs(Math.sin(degrees));
+        yaw_speed = Math.abs(sinDeg(degrees));
         client.counterClockwise(yaw_speed);
         console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
     }
@@ -99,7 +99,7 @@ function roll(degrees) {
         roll_func = client.right;
     }
 
-    roll_speed = Math.abs(Math.sin(degrees));
+    roll_speed = Math.abs(sinDeg(degrees));
     roll_func(roll_speed);
     console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degree));
 }
