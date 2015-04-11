@@ -20,20 +20,20 @@ stream.listen(server);
 
 
 
-var keypress = require('keypress');
+// var keypress = require('keypress');
  
-// make `process.stdin` begin emitting "keypress" events 
-keypress(process.stdin);
+// // make `process.stdin` begin emitting "keypress" events 
+// keypress(process.stdin);
  
-// listen for the "keypress" event 
-process.stdin.on('keypress', function (ch, key) {
-  console.log('got "keypress"', key);
-  if (key.ctrl && key.name == 'c') {
-    process.stdin.pause();
-  }
-});
+// // listen for the "keypress" event 
+// process.stdin.on('keypress', function (ch, key) {
+//   console.log('got "keypress"', key);
+//   if (key.ctrl && key.name == 'c') {
+//     process.stdin.pause();
+//   }
+// });
  
-process.stdin.resume();
+// process.stdin.resume();
 
 
 // var client = require("./oculus.js");
@@ -56,7 +56,7 @@ console.log("Booting up");
 // setTimeout(drone.roll,9000, -5);
 // setTimeout(drone.roll,10000, 0);
 
-// setTimeout(drone.land, 10000);
+// setTimeout(drone.land, 4000);
 
 
 
