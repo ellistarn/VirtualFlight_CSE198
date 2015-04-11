@@ -12,7 +12,7 @@ if (!String.prototype.format) {
 }
 
     
-function sinDeg (num) {
+Math.sinDeg = function(num) {
     return Math.sin(num/180*Math.PI);
 }
 
