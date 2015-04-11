@@ -152,13 +152,6 @@ function land() {
     // }
 }
 
-
-function video_stream(client) {
-    var pngStream = client.getPngStream();
-    pngStream.on('data', console.log);
-    return pngStream;
-}
-
 //Ctor
 var drone =  {
     //functions
@@ -175,37 +168,12 @@ var drone =  {
     takeoff: takeoff,
     land: land,
 
-    video_stream: video_stream,
-
     //variables
     client: client,
     hovering: hovering,
     flying: flying,
     taking_off: taking_off,
     landing: landing
-
-    //functions
-    // this.pitch = pitch;
-    // this.yaw = yaw;
-    // this.roll = roll;
-
-    // this.ascend = ascend;
-    // this.descend = descend;
-    // this.hold_height = hold_height;
-
-    // this.toggle_hover = toggle_hover;
-
-    // this.takeoff = takeoff;
-    // this.land = land;
-
-    // this.video_stream = video_stream;
-
-    // //variables
-    // this.client = client;
-    // this.hovering = false;
-    // this.flying = false;
-    // this.taking_off = false;
-    // this.landing = false;
 }
 
 //Returns a client object

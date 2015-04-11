@@ -1,0 +1,18 @@
+{
+  "name": "VirtualFlight_CSE198",
+  "subdomain": "undefined-VirtualFlight_CSE198",
+  "scripts": {
+    "start": ""
+  },
+  "version": "0.0.0",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "dependencies": {
+    "ar-drone": "0.3.x",
+    "dronestream": "1.1.x",
+    "http-server": "0.8.x",
+    "jitsu": "0.15.x",
+    "oculus": "0.0.x"
+  }
+}
