@@ -8,7 +8,7 @@ var client = require("./oculus.js");
 console.log("Booting up");
 
 setTimeout(drone.takeoff, 000);
-setTimeout(drone.yaw(30));
+setTimeout(drone.yaw(90));
 setTimeout(drone.land, 10000);
 
 

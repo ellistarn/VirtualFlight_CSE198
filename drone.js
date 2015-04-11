@@ -31,15 +31,15 @@ function pitch(degrees) {
 
     if (degrees > 0) {
         if (degrees > MAX_PITCH) {
-            degrees = MAX_PITCH;
             console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MAX_PITCH));
+            degrees = MAX_PITCH;
         } 
         pitch_func = client.forward;       
     }
     else {
         if (degrees < MIN_PITCH) {
-            degrees = MIN_PITCH;
             console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MIN_PITCH));
+            degrees = MIN_PITCH;
         }
         pitch_func = client.back;
     }
@@ -54,26 +54,28 @@ function pitch(degrees) {
 //must overcome YAW_TOLERANCE to generate movement commands.
 function yaw(degrees) {
     var yaw_func;
-    var yaw_speed = Math.abs(Math.sin(degrees));
+    var yaw_speed;
 
     if (Math.abs(degrees) < YAW_TOLERANCE) {
         return;
     }
     if (degrees > 0) {
         if (degrees > MAX_YAW) {
-            degrees = MAX_YAW;
             console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MAX_YAW));
+            degrees = MAX_YAW;
         }
-        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        yaw_speed = Math.abs(Math.sin(degrees));
         client.clockwise(yaw_speed);
+        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
     } 
     else {
         if (degrees < MIN_YAW) {
-            degrees = MIN_YAW;
             console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW));
+            degrees = MIN_YAW;
         }
-        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        yaw_speed = Math.abs(Math.sin(degrees));
         client.counterClockwise(yaw_speed);
+        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
     }
 }
 
@@ -84,15 +86,15 @@ function roll(degrees) {
 
     if (degrees > 0){
         if (degrees > MAX_ROLL) {
-            degrees = MAX_ROLL;
             console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));       
+            degrees = MAX_ROLL;
         }
         roll_func = client.left;
     }
     else {
         if (degrees < MIN_ROLL) {
-            degrees = MIN_ROLL;
             console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
+            degrees = MIN_ROLL;
         }
         roll_func = client.right;
     }
