@@ -1,3 +1,4 @@
+require("./helpers.js");
 //Main driver for the Virtual Flight application
 
 var drone = require("./drone.js");
@@ -5,9 +6,12 @@ var client = require("./oculus.js");
 
 
 console.log("Booting up");
-drone.
 
-console.log("Shutting down");
+setTimeout(drone.takeoff, 000);
+setTimeout(drone.yaw(30));
+setTimeout(drone.land, 10000);
+
+
 
 
 

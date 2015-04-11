@@ -3,6 +3,10 @@
 var arDrone = require('ar-drone');
 var client = arDrone.createClient();
 
+var hovering = false;
+var flying = false;
+var taking_off = false;
+var landing = false;
 
 //degree limiters. [-90,90]deg
 MAX_PITCH = 30;
@@ -71,8 +75,8 @@ function yaw(degrees) {
     }
 
     yaw_speed = Math.abs(Math.sin(degrees));
+    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
     yaw_func(yaw_speed);
-    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degree));
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
@@ -130,19 +134,22 @@ function toggle_hover() {
 
 //on keyhold "space"?
 function takeoff() {
-    if(!this.flying) {
+    client.takeoff();
+    // if(!this.flying) {
         console.log("CMD: taking off.");
-        this.taking_off = true;
-    }
-    console.log("WARNING: already flying.");
+    //     this.taking_off = true;
+    // }
+    // console.log("WARNING: already flying.");
 }
 
 //on keyhold "space"?
 function land() {
-    if(this.landing) {
+    client.stop();
+    client.land();
+    // if(!this.landing) {
         console.log("CMD: landing.")
-        this.landing = true;
-    }
+    //     this.landing = true;
+    // }
 }
 
 
@@ -153,30 +160,52 @@ function video_stream(client) {
 }
 
 //Ctor
-var drone = {
+var drone =  {
     //functions
+    pitch: pitch,
+    yaw: yaw,
+    roll: roll,
 
-    this.pitch = pitch;
-    this.yaw = yaw;
-    this.roll = roll;
+    ascend: ascend,
+    descend: descend,
+    hold_height: hold_height,
 
-    this.ascend = ascend;
-    this.descend = descend;
-    this.hold_height = hold_height;
+    toggle_hover: toggle_hover,
 
-    this.toggle_hover = toggle_hover;
+    takeoff: takeoff,
+    land: land,
 
-    this.takeoff = takeoff;
-    this.land = land;
-
-    this.video_stream = video_stream;
+    video_stream: video_stream,
 
     //variables
-    this.client = client;
-    this.hovering = false;
-    this.flying = false;
-    this.taking_off = false;
-    this.landing = false;
+    client: client,
+    hovering: hovering,
+    flying: flying,
+    taking_off: taking_off,
+    landing: landing
+
+    //functions
+    // this.pitch = pitch;
+    // this.yaw = yaw;
+    // this.roll = roll;
+
+    // this.ascend = ascend;
+    // this.descend = descend;
+    // this.hold_height = hold_height;
+
+    // this.toggle_hover = toggle_hover;
+
+    // this.takeoff = takeoff;
+    // this.land = land;
+
+    // this.video_stream = video_stream;
+
+    // //variables
+    // this.client = client;
+    // this.hovering = false;
+    // this.flying = false;
+    // this.taking_off = false;
+    // this.landing = false;
 }
 
 //Returns a client object
