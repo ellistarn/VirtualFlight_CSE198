@@ -54,7 +54,7 @@ function pitch(degrees) {
 //must overcome YAW_TOLERANCE to generate movement commands.
 function yaw(degrees) {
     var yaw_func;
-    var yaw_speed;
+    var yaw_speed = Math.abs(Math.sin(degrees));
 
     if (Math.abs(degrees) < YAW_TOLERANCE) {
         return;
@@ -64,19 +64,17 @@ function yaw(degrees) {
             degrees = MAX_YAW;
             console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MAX_YAW));
         }
-        yaw_func = client.clockwise;
+        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        client.clockwise(yaw_speed);
     } 
     else {
         if (degrees < MIN_YAW) {
             degrees = MIN_YAW;
             console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW));
         }
-        yaw_func = client.counterClockwise;
+        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        client.counterClockwise(yaw_speed);
     }
-
-    yaw_speed = Math.abs(Math.sin(degrees));
-    console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
-    yaw_func(yaw_speed);
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
