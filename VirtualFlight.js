@@ -1,22 +1,50 @@
-require("./helpers.js");
 //Main driver for the Virtual Flight application
 
+require("./helpers.js");
+
+/*
+================Stream Video================
+*/
 var drone = require("./drone.js");
-var stream = require("dronestream")
-//require('ar-drone-png-stream');
+
+/*
+================Stream Video================
+*/
+var PORT = 8000;
+var PAGE = "/public/index.html"
+var stream = require("dronestream");
 var server = require("http").createServer(function(req, res) {
-    require("fs").createReadStream(__dirname + "/public/index.html").pipe(res);
-}).listen(8000);
+    require("fs").createReadStream(__dirname + PAGE).pipe(res);
+}).listen(PORT);
+stream.listen(server); 
+
+
+
+var keypress = require('keypress');
+ 
+// make `process.stdin` begin emitting "keypress" events 
+keypress(process.stdin);
+ 
+// listen for the "keypress" event 
+process.stdin.on('keypress', function (ch, key) {
+  console.log('got "keypress"', key);
+  if (key.ctrl && key.name == 'c') {
+    process.stdin.pause();
+  }
+});
+ 
+process.stdin.resume();
+
+
 // var client = require("./oculus.js");
 
-// drone.stream_video();
+
 
 console.log("Booting up");
+
+
+
 // setTimeout(drone.takeoff, 0);
-
-
-stream.listen(server); 
-// stream(drone.client, {port: 8000});
 
 // setTimeout(drone.takeoff, 0);
 
