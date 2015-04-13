@@ -1,9 +1,8 @@
 //Main driver for the Virtual Flight application
 
 require("./helpers.js");
-
 /*
-================Stream Video================
+================Drone Object================
 */
 var drone = require("./drone.js");
 
@@ -20,22 +19,6 @@ stream.listen(server);
 
 
 
-// var keypress = require('keypress');
- 
-// // make `process.stdin` begin emitting "keypress" events 
-// keypress(process.stdin);
- 
-// // listen for the "keypress" event 
-// process.stdin.on('keypress', function (ch, key) {
-//   console.log('got "keypress"', key);
-//   if (key.ctrl && key.name == 'c') {
-//     process.stdin.pause();
-//   }
-// });
- 
-// process.stdin.resume();
-
-
 // var client = require("./oculus.js");
 
 
@@ -43,8 +26,6 @@ stream.listen(server);
 console.log("Booting up");
 
 
-
-// setTimeout(drone.takeoff, 0);
 
 // setTimeout(drone.takeoff, 0);
 
@@ -56,14 +37,5 @@ console.log("Booting up");
 // setTimeout(drone.roll,9000, -5);
 // setTimeout(drone.roll,10000, 0);
 
-// setTimeout(drone.land, 4000);
+// setTimeout(drone.land, 14000);
 
-
-
-
-
-
-//This function streams commands from the oculus rift device and calls the drone object
-// function create_command_stream() {
-
-// }

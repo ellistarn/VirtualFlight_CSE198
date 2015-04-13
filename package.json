@@ -11,8 +11,22 @@
   "dependencies": {
     "ar-drone": "0.3.x",
     "dronestream": "1.1.x",
+    "express": "^4.12.3",
     "http-server": "0.8.x",
     "jitsu": "0.15.x",
     "oculus": "0.0.x"
-  }
+  },
+  "description": "Research Project for Spring 2015 with Jurgen Schultz. Group: Ellis Bigelow, Sam Chan, Brain Tai.",
+  "main": "VirtualFlight.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/embigelo/VirtualFlight_CSE198"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/embigelo/VirtualFlight_CSE198/issues"
+  },
+  "homepage": "https://github.com/embigelo/VirtualFlight_CSE198"
 }
