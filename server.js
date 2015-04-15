@@ -4,7 +4,7 @@ require("./helpers.js");
 /*
 ================Drone Object================
 */
-var drone = require("./drone.js");
+var drone = require("./models/drone.js");
 
 /*
 ================Server================
@@ -12,11 +12,17 @@ var drone = require("./drone.js");
 var express = require('express');
 var app = express();
 
+app.use(express.static(__dirname + '/public'));
 
-var PORT = 8000;
-var PAGE = "/public/index.html";
+var routes = {
+  stream: require('./routes/stream')
+};
 
-var server = app.listen(PORT, function() {
+app.get('/', function(req, res) {
+     res.sendFile('index.html');
+});
+
+var server = app.listen(8000, function() {
     console.log("Started server on port %d", server.address().port);
 });
 
@@ -24,6 +30,7 @@ var server = app.listen(PORT, function() {
 /*
 ================DRONE CONTROL HTTP API================
 */
+/*
 app.post("/", function (req, res) {
     var success:
     switch(req.command) {
@@ -59,12 +66,10 @@ app.post("/", function (req, res) {
 ================Video Stream================
 */
 
-var stream = require("dronestream");
-stream.listen(server); 
-
-
 
 // var client = require("./oculus.js");
+var stream = require("dronestream");
+stream.listen(server);
 
 
 
