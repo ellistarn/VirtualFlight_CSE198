@@ -5,6 +5,26 @@
     <title>Parrot AR 2.0 Stream</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+    $(document).on('keydown', function(ev) {
+    	if(ev.keyCode === 87){
+    		console.log("w was pressed");
+    	}
+    	if(ev.keyCode === 83){
+    		console.log("s was pressed");
+    	}
+    });
+
+    $(document).on('keyup', function(ev) {
+    	if(ev.keyCode === 87){
+    		console.log("w was released");
+    	}
+    	if(ev.keyCode === 83){
+    		console.log("s was released");
+    	}
+    });
+    </script>
 </head>
 <body>
     <div id="droneStream"></div>
