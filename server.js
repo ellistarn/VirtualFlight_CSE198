@@ -30,9 +30,10 @@ var server = app.listen(8000, function() {
 /*
 ================DRONE CONTROL HTTP API================
 */
-/*
+
 app.post("/", function (req, res) {
-    var success:
+    console.log(req);
+    var success;
     switch(req.command) {
         case "pitch":
             success = drone.pitch();
@@ -52,6 +53,9 @@ app.post("/", function (req, res) {
             success = drone.takeoff();
         case "land":
             success = drone.land();
+        default:
+            success = false;
+            console.log("Could not recognize req.command: %s", req.command);
 
         if (!success) {
             console.log("Post request failed")
@@ -64,7 +68,7 @@ app.post("/", function (req, res) {
 
 /*
 ================Video Stream================
-*/
+
 
 
 // var client = require("./oculus.js");
@@ -88,4 +92,4 @@ console.log("Booting up");
 // setTimeout(drone.roll,10000, 0);
 
 // setTimeout(drone.land, 14000);
-
+*/
