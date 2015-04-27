@@ -11,28 +11,38 @@ var drone = require("./models/drone.js");
 */
 var express = require('express');
 var app = express();
-
-app.use(express.static(__dirname + '/public'));
-
-var routes = {
-  stream: require('./routes/stream')
-};
-
-app.get('/', function(req, res) {
-     res.sendFile('index.html');
-});
-
 var server = app.listen(8000, function() {
     console.log("Started server on port %d", server.address().port);
 });
 
+//Middleware
+// var bodyParser = require('body-parser');
+// app.use(bodyParser.urlencoded({
+//   extended: true
+// }));
+// app.use(bodyParser.json());
+
+
+
+//Static views
+app.use(express.static(__dirname + '/public'));
+
+//Routes
+var routes = {
+  stream: require('./routes/stream')
+};
+
+//Urls
+app.get('/', function(req, res) {
+     res.sendFile('index.html');
+});
 
 /*
 ================DRONE CONTROL HTTP API================
 */
 
 app.post("/", function (req, res) {
-    console.log(req);
+    console.log(req.body);
     var success;
     switch(req.command) {
         case "pitch":
@@ -55,7 +65,7 @@ app.post("/", function (req, res) {
             success = drone.land();
         default:
             success = false;
-            console.log("Could not recognize req.command: %s", req.command);
+            console.log("Could not recognize req.command: %s", req.body);
 
         if (!success) {
             console.log("Post request failed")
