@@ -9,6 +9,7 @@
     <script>
     $(document).on('keydown', function(ev) {
         var command;
+        console.log(ev.keyCode);
     	if(ev.keyCode === 87){
             command = "ascend";
     	}
@@ -17,6 +18,9 @@
     	}
         else if(ev.keyCode == 32) {
             command = "power";
+        }
+        else if(ev.keyCode == 80) {
+            command = "pause";
         }
         else {
             return;

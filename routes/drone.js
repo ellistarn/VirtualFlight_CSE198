@@ -25,11 +25,8 @@ router.route('/')
         case "descend":
             success = drone.descend();
             break;
-        case "hold_height":
-            success = drone.hold_height();
-            break;
-        case "toggle_hover":
-            success = drone.toggle_hover();
+        case "pause":
+            success = drone.pause();
             break;
         case "power":
             success = drone.power();

@@ -1,8 +1,11 @@
 //This module serves as the main control between 
 //drove API flight commands and the Virtual Flight driver
 var arDrone = require('ar-drone');
-var eventListener = require('events').EventEmitter;
 var client = arDrone.createClient();
+client.flying = false;
+client.on('navdata', function(data) {
+    client.flying = data.droneState.flying;
+});
 
 //degrees limiters. [-90,90]deg
 MAX_PITCH = 30;
@@ -24,6 +27,9 @@ CLIMB_PERIOD = 250;
 
 //takes a value between MIN_PITCH & MAX_PITCH and sends command to drone.
 function pitch(degrees) {
+    if (client.paused) {
+        return false;
+    }
     var pitch_func;
     var pitch_speed;
 
@@ -33,8 +39,8 @@ function pitch(degrees) {
             degrees = MAX_PITCH;
         }
         pitch_speed = Math.abs(Math.sinDeg(degrees));
-        client.front(pitch_speed);
         console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degrees));
+        return client.front(pitch_speed);
     }
     else {
         if (degrees < MIN_PITCH) {
@@ -42,8 +48,8 @@ function pitch(degrees) {
             degrees = MIN_PITCH;
         }
         pitch_speed = Math.abs(Math.sinDeg(degrees));
-        client.back(pitch_speed);
         console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degrees));
+        return client.back(pitch_speed);
     }
 }
 
@@ -51,6 +57,9 @@ function pitch(degrees) {
 //translates degrees from OR to speed for parrot API
 //must overcome YAW_TOLERANCE to generate movement commands.
 function yaw(degrees) {
+    if (client.paused) {
+        return false;
+    }
     var yaw_func;
     var yaw_speed;
 
@@ -63,8 +72,8 @@ function yaw(degrees) {
             degrees = MAX_YAW;
         }
         yaw_speed = Math.abs(Math.sinDeg(degrees));
-        client.clockwise(yaw_speed);
         console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        return client.clockwise(yaw_speed);
     } 
     else {
         if (degrees < MIN_YAW) {
@@ -72,13 +81,16 @@ function yaw(degrees) {
             degrees = MIN_YAW;
         }
         yaw_speed = Math.abs(Math.sinDeg(degrees));
-        client.counterClockwise(yaw_speed);
         console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        return client.counterClockwise(yaw_speed);
     }
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
-function roll(degrees) {   
+function roll(degrees) {  
+    if (client.paused) {
+        return false;
+    }
     var roll_func;
     var roll_speed;
 
@@ -88,8 +100,8 @@ function roll(degrees) {
             degrees = MAX_ROLL;
         }
         roll_speed = Math.abs(Math.sinDeg(degrees));
-        client.right(roll_speed);
         console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degrees));        
+        return client.right(roll_speed);
     }
     else {
         if (degrees < MIN_ROLL) {
@@ -97,8 +109,8 @@ function roll(degrees) {
             degrees = MIN_ROLL;
         }
         roll_speed = Math.abs(Math.sinDeg(degrees));
-        client.left(roll_speed);
         console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degrees));
+        return client.left(roll_speed);
     }
 }
 
@@ -116,64 +128,33 @@ function descend() {
     client.down(CLIMB_SPEED);
     client.after(CLIMB_PERIOD, function() {this.down(0)});
     return true;
-
 }
 
-//on keyrelease "w" or "s"
-function hold_height() {
-    console.log("CMD: stop climbing or descending.");
-    client.up(0);
+//on keypress "p"
+function pause() {
+    if (!this.paused) {
+        console.log("CMD: unpause.");
+        this.paused = false;
+    }
+    else {
+        console.log("CMD: pause.");
+        this.paused = true;
+        client.stop()
+    }
 }
 
 //on keypress "space"
-function toggle_hover() {
-    if (!this.hovering) {
-        console.log("CMD: hover.");
-        client.stop();
-    }
-    console.log("CMD: stop hovering.");
-    this.hovering = !this.hovering;
-}
-
-
 function power() {
-    console.log("here")
-    client.on('navdata', function(navdata) {
-        console.log("true");
-        // console.log(navdata);
-        // event_listener = navdata;
-    });
-
-    // console.log(events.droneState());
-    return true;
-
-    // if (this.flying) {
-    //     client.land();
-    // }
-    // else {
-    //     client.takeoff();
-    // }
+    if (client.flying) {
+        console.log("CMD: Land");
+        client.stop();
+        return client.land();
+    }
+    else {
+        console.log("CMD: Takeoff");
+        return client.takeoff();
+    }
 }
-
-// //on keyhold "space"?
-// function takeoff() {
-//     console.log("CMD: taking off.");
-//     return client.takeoff();
-//     // if(!this.flying) {
-//     //     this.taking_off = true;
-//     // }
-//     // console.log("WARNING: already flying.");
-// }
-
-// //on keyhold "space"?
-// function land() {
-//     client.stop();
-//     console.log("CMD: landing.")
-//     return client.land();
-//     // if(!this.landing) {
-//     //     this.landing = true;
-//     // }
-// }
 
 //Ctor
 var drone =  {
@@ -184,14 +165,9 @@ var drone =  {
 
     ascend: ascend,
     descend: descend,
-    hold_height: hold_height,
 
-    toggle_hover: toggle_hover,
-    power: power,
-
-
-    //variables
-    client: client
+    pause: pause,
+    power: power
 }
 
 //Returns a client object
