@@ -31,9 +31,8 @@ router.route('/')
             success = drone.toggle_hover();
             break;
         case "takeoff":
-            console.log("asdad");
-            break;
             success = drone.takeoff();
+            break;
         case "land":
             success = drone.land();
             break;
