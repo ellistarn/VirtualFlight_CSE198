@@ -4,7 +4,8 @@ var drone = require("../models/drone.js");
 
 router.route('/')
   .post(function(req, res) {
-    console.log(command = req.body.command);
+    command = req.body.command;
+    // console.log(command = req.body.command);
     // console.log(req.body.command);
 
     var success;
@@ -30,11 +31,8 @@ router.route('/')
         case "toggle_hover":
             success = drone.toggle_hover();
             break;
-        case "takeoff":
-            success = drone.takeoff();
-            break;
-        case "land":
-            success = drone.land();
+        case "power":
+            success = drone.power();
             break;
         default:
             success = false;
