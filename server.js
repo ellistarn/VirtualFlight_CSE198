@@ -11,36 +11,41 @@ var drone = require("./models/drone.js");
 */
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 var server = app.listen(8000, function() {
     console.log("Started server on port %d", server.address().port);
 });
-
-//Middleware
-// var bodyParser = require('body-parser');
-// app.use(bodyParser.urlencoded({
-//   extended: true
-// }));
-// app.use(bodyParser.json());
-
-
 
 //Static views
 app.use(express.static(__dirname + '/public'));
 
 //Routes
 var routes = {
-  stream: require('./routes/stream')
+  stream: require('./routes/stream'),
+  drone: require('./routes/drone')
 };
 
-//Urls
+//Url
 app.get('/', function(req, res) {
      res.sendFile('index.html');
 });
 
+//set route as middleware
+app.use('/drone', routes.drone);
+
+/*
+================Video Stream================
+*/
+var stream = require("dronestream");
+stream.listen(server);
+
+
+
 /*
 ================DRONE CONTROL HTTP API================
 */
-
+/*
 app.post("/", function (req, res) {
     console.log(req.body);
     var success;
@@ -75,22 +80,15 @@ app.post("/", function (req, res) {
         }
     }
 });
-
-/*
-================Video Stream================
-
+*/
 
 
 // var client = require("./oculus.js");
-var stream = require("dronestream");
-stream.listen(server);
 
 
 
-console.log("Booting up");
 
-
-
+// console.log("Booting up");
 // setTimeout(drone.takeoff, 0);
 
 // setTimeout(drone.pitch,5000, 3);
@@ -102,4 +100,4 @@ console.log("Booting up");
 // setTimeout(drone.roll,10000, 0);
 
 // setTimeout(drone.land, 14000);
-*/
+
