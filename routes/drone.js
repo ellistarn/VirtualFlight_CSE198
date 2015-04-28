@@ -39,13 +39,13 @@ router.route('/')
         default:
             success = false;
             console.log("Could not recognize req.command: %s", command);
-
-        if (!success) {
-            console.log("Post request failed")
-            res.status(500).send("command failed");
-        } else {
-            res.status(200).send("success");
         }
+
+    if (!success) {
+        console.log("Post request failed")
+        res.status(500).send("command failed");
+    } else {
+        res.status(200).send(success);
     }
 });
 

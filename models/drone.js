@@ -23,6 +23,8 @@ YAW_TOLERANCE = 10;
 
 //defines a fixed climb speed to be used with ascend and descend. [0,1]
 CLIMB_SPEED = .25
+//number of milliseconds to climb before requiring a new command
+CLIMB_PERIOD = 10
 
 //takes a value between MIN_PITCH & MAX_PITCH and sends command to drone.
 function pitch(degrees) {
@@ -108,12 +110,14 @@ function roll(degrees) {
 function ascend() {
     console.log("CMD: ascend at speed {0}.".format(CLIMB_SPEED));
     client.up(CLIMB_SPEED);
+    client.after(CLIMB_PERIOD, function() {this.up(0)});
 }
 
 //on keypress "s"
 function descend() {
     console.log("CMD: descend at speed {0}.".format(CLIMB_SPEED));
     client.down(CLIMB_SPEED);
+    client.after(CLIMB_PERIOD, function() {this.down(0)});
 }
 
 //on keyrelease "w" or "s"
@@ -134,9 +138,9 @@ function toggle_hover() {
 
 //on keyhold "space"?
 function takeoff() {
-    client.takeoff();
+    console.log("CMD: taking off.");
+    return client.takeoff();
     // if(!this.flying) {
-        console.log("CMD: taking off.");
     //     this.taking_off = true;
     // }
     // console.log("WARNING: already flying.");
