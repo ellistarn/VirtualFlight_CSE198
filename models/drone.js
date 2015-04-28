@@ -149,9 +149,9 @@ function takeoff() {
 //on keyhold "space"?
 function land() {
     client.stop();
-    client.land();
+    console.log("CMD: landing.")
+    return client.land();
     // if(!this.landing) {
-        console.log("CMD: landing.")
     //     this.landing = true;
     // }
 }
