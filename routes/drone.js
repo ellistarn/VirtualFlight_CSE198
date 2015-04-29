@@ -1,6 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var drone = require("../models/drone.js");
+var oculus = require("../models/oculus.js");
+
+var orientation;
+
+function trackOrientation() {
+    this.orientation = oculus.updateOrientation();
+    console.log(this.orientation);
+    setInterval(trackOrientation, 33);
+}
+
+trackOrientation();
 
 router.route('/')
   .post(function(req, res) {

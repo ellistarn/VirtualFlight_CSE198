@@ -1,21 +1,20 @@
 var nodeOculus = require('node-oculus');
 var client = nodeOculus.createOculus();
 
-var orientation;
+// var orientation;
 
 client.discoverSensor();
 
-function trackOrientation() {
-    this.orientation = client.getOrientationQuat();
-    console.log(this.orientation);
+function updateOrientation() {
+    return client.getOrientationQuat();
 }
 
 var oculus =  {
     //function
-    trackOrientation: trackOrientation,
+    updateOrientation: updateOrientation,
 
     //variables
-    orientation: orientation
+    // orientation: orientation
 }
 
 
