@@ -2,9 +2,12 @@
 //drove API flight commands and the Virtual Flight driver
 var arDrone = require('ar-drone');
 var client = arDrone.createClient();
-client.flying = false;
+var paused = false;
+var flying = false;
+
+//update drone flying state
 client.on('navdata', function(data) {
-    client.flying = data.droneState.flying;
+    flying = data.droneState.flying;
 });
 
 //degrees limiters. [-90,90]deg
@@ -145,7 +148,7 @@ function pause() {
 
 //on keypress "space"
 function power() {
-    if (client.flying) {
+    if (this.flying) {
         console.log("CMD: Land");
         client.stop();
         return client.land();
@@ -167,7 +170,11 @@ var drone =  {
     descend: descend,
 
     pause: pause,
-    power: power
+    power: power,
+
+    //variables
+    flying: flying,
+    paused: paused
 }
 
 //Returns a client object

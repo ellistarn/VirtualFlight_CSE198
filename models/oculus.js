@@ -7,9 +7,9 @@ var yaw_val = 0;
 var roll_val = 0;
 
 
-var pitch_zero = 0;
-var yaw_zero = 0;
-var roll_zero = 0;
+var pitch_zero;
+var yaw_zero;
+var roll_zero;
 
 client.discoverSensor();
 
@@ -24,16 +24,17 @@ function setOrientationZero() {
 
 function updateOrientation() {
     var orientation = client.getOrientationQuat();
-    this.pitch_val = orientation[0] - this.pitch_zero ;
+
+    this.pitch_val = orientation[0] - this.pitch_zero;
     this.yaw_val = orientation[1] - this.yaw_zero;
     this.roll_val = orientation[2] - this.roll_zero;
 
-    console.log("Relative Pitch: %d", this.pitch_val);
-    console.log("Relative Yaw: %d", this.yaw_val);
-    console.log("Relative Roll: %d", this.roll_val);
+    // console.log("Relative Pitch: "+ this.pitch_val);
+    // console.log("Relative Yaw: "+ this.yaw_val);
+    // console.log("Relative Roll: "+ this.roll_val);
 }
 
-var oculus =  {
+var oculus = {
     //function
     setOrientationZero: setOrientationZero,
     updateOrientation: updateOrientation,
@@ -48,9 +49,8 @@ var oculus =  {
     roll_val: roll_val
 }
 
-
 //zeroes the device
-setOrientationZero();
+oculus.setOrientationZero();
 
 //Returns a client object
 module.exports = oculus;

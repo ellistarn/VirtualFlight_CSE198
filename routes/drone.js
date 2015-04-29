@@ -3,30 +3,29 @@ var router = express.Router();
 var drone = require("../models/drone.js");
 var oculus = require("../models/oculus.js");
 
-var orientation;
 
-// function trackOrientation() {
-//     this.orientation = oculus.getOrientation();
-// }
-setInterval(oculus.updateOrientation, 1000);
+//Pitch, Yaw, Roll update
+var delta = 100 //ms
+setInterval(function () {
+    //Get new orientation data
+    oculus.updateOrientation();
 
+    //Send requests to drone
+    if (drone.flying && !drone.paused) {
+        drone.pitch(oculus.pitch_val);
+        drone.yaw(oculus.yaw_val);
+        drone.roll(oculus.roll_val);
+    }
+    
+}, delta);
+
+//Ascend, Descend, Pause, Power
 router.route('/')
   .post(function(req, res) {
     command = req.body.command;
-    // console.log(command = req.body.command);
-    // console.log(req.body.command);
 
     var success;
     switch(command) {
-        // case "pitch":
-        //     success = drone.pitch();
-        //     break;
-        // case "yaw":
-        //     success = drone.yaw();
-        //     break;
-        // case "roll":
-        //     success = drone.roll();
-        //     break;
         case "ascend":
             success = drone.ascend();
             break;
@@ -34,9 +33,11 @@ router.route('/')
             success = drone.descend();
             break;
         case "pause":
+            oculus.setOrientationZero();
             success = drone.pause();
             break;
         case "power":
+            oculus.setOrientationZero();
             success = drone.power();
             break;
         default:
