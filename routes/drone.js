@@ -5,13 +5,10 @@ var oculus = require("../models/oculus.js");
 
 var orientation;
 
-function trackOrientation() {
-    this.orientation = oculus.updateOrientation();
-    console.log(this.orientation);
-    setInterval(trackOrientation, 33);
-}
-
-trackOrientation();
+// function trackOrientation() {
+//     this.orientation = oculus.getOrientation();
+// }
+setInterval(oculus.updateOrientation, 1000);
 
 router.route('/')
   .post(function(req, res) {
@@ -21,15 +18,15 @@ router.route('/')
 
     var success;
     switch(command) {
-        case "pitch":
-            success = drone.pitch();
-            break;
-        case "yaw":
-            success = drone.yaw();
-            break;
-        case "roll":
-            success = drone.roll();
-            break;
+        // case "pitch":
+        //     success = drone.pitch();
+        //     break;
+        // case "yaw":
+        //     success = drone.yaw();
+        //     break;
+        // case "roll":
+        //     success = drone.roll();
+        //     break;
         case "ascend":
             success = drone.ascend();
             break;
