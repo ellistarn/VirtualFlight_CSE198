@@ -29,9 +29,13 @@ function updateOrientation() {
     this.yaw_val = orientation[1] - this.yaw_zero;
     this.roll_val = orientation[2] - this.roll_zero;
 
-    // console.log("Relative Pitch: "+ this.pitch_val);
-    // console.log("Relative Yaw: "+ this.yaw_val);
-    // console.log("Relative Roll: "+ this.roll_val);
+    // console.log("Absolute Pitch: "+ Math.round(orientation[0]*100)/100);
+    // console.log("Absolute Yaw: "+ Math.round(orientation[1]*100)/100);
+    // console.log("Absolute Roll: "+ Math.round(orientation[2]*100)/100);
+
+    // console.log("Relative Pitch: "+ Math.round(this.pitch_val*100)/100);
+    // console.log("Relative Yaw: "+ Math.round(this.yaw_val*100)/100);
+    // console.log("Relative Roll: "+ Math.round(this.roll_val*100)/100);
 }
 
 var oculus = {

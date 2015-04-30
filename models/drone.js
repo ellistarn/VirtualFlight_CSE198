@@ -7,7 +7,7 @@ var flying = false;
 
 //update drone flying state
 client.on('navdata', function(data) {
-    flying = data.droneState.flying;
+    drone.flying = data.droneState.flying ? true : false;
 });
 
 //degrees limiters. [-90,90]deg
@@ -21,7 +21,7 @@ MAX_ROLL = 30;
 MIN_ROLL = -30;
 
 //yaw must exceed this in order to generate movement commands. [0,90]deg
-YAW_TOLERANCE = 10;
+YAW_TOLERANCE = 0;
 
 //defines a fixed climb speed to be used with ascend and descend. [0,1]
 CLIMB_SPEED = 1;
@@ -29,90 +29,91 @@ CLIMB_SPEED = 1;
 CLIMB_PERIOD = 250;
 
 //takes a value between MIN_PITCH & MAX_PITCH and sends command to drone.
-function pitch(degrees) {
+function pitch(speed) {
     if (client.paused) {
         return false;
     }
     var pitch_func;
     var pitch_speed;
 
-    if (degrees > 0) {
-        if (degrees > MAX_PITCH) {
-            console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MAX_PITCH));
-            degrees = MAX_PITCH;
+    if (speed > 0) {
+        if (speed > MAX_PITCH) {
+            console.log("WARNING: limiting pitch from {0} to {1}.".format(speed,MAX_PITCH));
+            speed = MAX_PITCH;
         }
-        pitch_speed = Math.abs(Math.sinDeg(degrees));
-        console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degrees));
+        pitch_speed = Math.abs(speed);
+        console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,speed));
         return client.front(pitch_speed);
     }
     else {
-        if (degrees < MIN_PITCH) {
-            console.log("WARNING: limiting pitch from {0} to {1}.".format(degrees,MIN_PITCH));
-            degrees = MIN_PITCH;
+        if (speed < MIN_PITCH) {
+            console.log("WARNING: limiting pitch from {0} to {1}.".format(speed,MIN_PITCH));
+            speed = MIN_PITCH;
         }
-        pitch_speed = Math.abs(Math.sinDeg(degrees));
-        console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,degrees));
+        pitch_speed = Math.abs(speed);
+        console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,speed));
         return client.back(pitch_speed);
     }
 }
 
 //takes a value between MIN_YAW & MAX_YAW and sends command to drone.
-//translates degrees from OR to speed for parrot API
+//translates speed from OR to speed for parrot API
 //must overcome YAW_TOLERANCE to generate movement commands.
-function yaw(degrees) {
+function yaw(speed) {
     if (client.paused) {
         return false;
     }
+    console.log("yawing");
     var yaw_func;
     var yaw_speed;
 
-    if (Math.abs(degrees) < YAW_TOLERANCE) {
+    if (Math.abs(speed) < YAW_TOLERANCE) {
         return;
     }
-    if (degrees > 0) {
-        if (degrees > MAX_YAW) {
-            console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MAX_YAW));
-            degrees = MAX_YAW;
+    if (speed > 0) {
+        if (speed > MAX_YAW) {
+            console.log("WARNING: limiting yaw from {0} to {1}.".format(speed,MAX_YAW));
+            speed = MAX_YAW;
         }
-        yaw_speed = Math.abs(Math.sinDeg(degrees));
-        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        yaw_speed = Math.abs(speed);
+        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, speed));
         return client.clockwise(yaw_speed);
     } 
     else {
-        if (degrees < MIN_YAW) {
-            console.log("WARNING: limiting yaw from {0} to {1}.".format(degrees,MIN_YAW));
-            degrees = MIN_YAW;
+        if (speed < MIN_YAW) {
+            console.log("WARNING: limiting yaw from {0} to {1}.".format(speed,MIN_YAW));
+            speed = MIN_YAW;
         }
-        yaw_speed = Math.abs(Math.sinDeg(degrees));
-        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, degrees));
+        yaw_speed = Math.abs(speed);
+        console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, speed));
         return client.counterClockwise(yaw_speed);
     }
 }
 
 //takes a value between MIN_ROLL & MAX_ROLL and sends command to drone.
-function roll(degrees) {  
+function roll(speed) {  
     if (client.paused) {
         return false;
     }
     var roll_func;
     var roll_speed;
 
-    if (degrees > 0){
-        if (degrees > MAX_ROLL) {
-            console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MAX_ROLL));       
-            degrees = MAX_ROLL;
+    if (speed > 0){
+        if (speed > MAX_ROLL) {
+            console.log("WARNING: limiting roll from {0} to {1}.".format(speed,MAX_ROLL));       
+            speed = MAX_ROLL;
         }
-        roll_speed = Math.abs(Math.sinDeg(degrees));
-        console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degrees));        
+        roll_speed = Math.abs(speed);
+        console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, speed));        
         return client.right(roll_speed);
     }
     else {
-        if (degrees < MIN_ROLL) {
-            console.log("WARNING: limiting roll from {0} to {1}.".format(degrees,MIN_ROLL));
-            degrees = MIN_ROLL;
+        if (speed < MIN_ROLL) {
+            console.log("WARNING: limiting roll from {0} to {1}.".format(speed,MIN_ROLL));
+            speed = MIN_ROLL;
         }
-        roll_speed = Math.abs(Math.sinDeg(degrees));
-        console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, degrees));
+        roll_speed = Math.abs(speed);
+        console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, speed));
         return client.left(roll_speed);
     }
 }
@@ -135,19 +136,25 @@ function descend() {
 
 //on keypress "p"
 function pause() {
+    if (!flying) {
+        return false;
+    }
+
     if (!this.paused) {
         console.log("CMD: unpause.");
         this.paused = false;
+        return true;
     }
     else {
         console.log("CMD: pause.");
         this.paused = true;
-        client.stop()
+        return client.stop();
     }
 }
 
 //on keypress "space"
 function power() {
+    console.log(this.flying);
     if (this.flying) {
         console.log("CMD: Land");
         client.stop();

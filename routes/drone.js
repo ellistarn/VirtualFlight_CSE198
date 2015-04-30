@@ -9,12 +9,18 @@ var delta = 100 //ms
 setInterval(function () {
     //Get new orientation data
     oculus.updateOrientation();
+    
+    // console.log("Pitch: "+oculus.pitch_val);    
+    // console.log("Yaw: "+oculus.yaw_val);
+    // console.log("Roll: "+oculus.roll_val);
 
     //Send requests to drone
+    // if (true) {
     if (drone.flying && !drone.paused) {
         drone.pitch(oculus.pitch_val);
         drone.yaw(oculus.yaw_val);
         drone.roll(oculus.roll_val);
+        console.log("");
     }
     
 }, delta);
