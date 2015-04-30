@@ -4,65 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Parrot AR 2.0 Stream</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+
     <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
     <script src="./scripts/jquery.min.js"></script>
-    <script>
-    $(document).on('keydown', function(ev) {
-        var command;
-        console.log(ev.keyCode);
-    	if(ev.keyCode === 87){
-            command = "ascend";
-    	}
-    	else if(ev.keyCode === 83){
-            command = "descend";
-    	}
-        else if(ev.keyCode == 32) {
-            command = "power";
-        }
-        else if(ev.keyCode == 80) {
-            command = "pause";
-        }
-
-        //TEMPORARY
-        else if(ev.keyCode == 65) {
-            command = "left";
-        }
-        else if(ev.keyCode == 68) {
-            command = "right";
-        }
-        else if(ev.keyCode == 37) {
-            command = "rollleft";
-        }
-        else if(ev.keyCode == 38) {
-            command = "rollright";
-        }
-        else if(ev.keyCode == 39) {
-            command = "forward";
-        }
-        else if(ev.keyCode == 40) {
-            command = "back";
-        }
-
-
-        else {
-            return;
-        }
-        var data = JSON.stringify({"command":command});
-        var url = "/drone";
-        console.log(data);
-        
-        $.ajax({
-          type: "POST",
-          url: url,
-          data: data,
-          contentType: "application/json"
-        });
-    });
-
-
-
-
-    </script>
+    <script src="./scripts/app.js"></script>
+   
 </head>
 <body>
     <div id="droneStream"></div>

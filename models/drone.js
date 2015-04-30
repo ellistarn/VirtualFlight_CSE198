@@ -21,12 +21,12 @@ MAX_ROLL = 30;
 MIN_ROLL = -30;
 
 //yaw must exceed this in order to generate movement commands. [0,90]deg
-YAW_TOLERANCE = 0;
+YAW_TOLERANCE = 0.1;
 
 //defines a fixed climb speed to be used with ascend and descend. [0,1]
 CLIMB_SPEED = 1;
 //number of milliseconds to climb before requiring a new command
-CLIMB_PERIOD = 250;
+CLIMB_PERIOD = 100;
 
 //takes a value between MIN_PITCH & MAX_PITCH and sends command to drone.
 function pitch(speed) {
@@ -43,7 +43,7 @@ function pitch(speed) {
         }
         pitch_speed = Math.abs(speed);
         console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,speed));
-        return client.front(pitch_speed);
+        return client.back(pitch_speed);
     }
     else {
         if (speed < MIN_PITCH) {
@@ -52,7 +52,7 @@ function pitch(speed) {
         }
         pitch_speed = Math.abs(speed);
         console.log("CMD: pitch at speed: {0}. Sensor={1}deg".format(pitch_speed,speed));
-        return client.back(pitch_speed);
+        return client.front(pitch_speed);
     }
 }
 
@@ -60,9 +60,9 @@ function pitch(speed) {
 //translates speed from OR to speed for parrot API
 //must overcome YAW_TOLERANCE to generate movement commands.
 function yaw(speed) {
-    if (client.paused) {
-        return false;
-    }
+    // if (client.paused) {
+    //     return false;
+    // }
     console.log("yawing");
     var yaw_func;
     var yaw_speed;
@@ -77,7 +77,7 @@ function yaw(speed) {
         }
         yaw_speed = Math.abs(speed);
         console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, speed));
-        return client.clockwise(yaw_speed);
+        return client.counterClockwise(yaw_speed);
     } 
     else {
         if (speed < MIN_YAW) {
@@ -86,7 +86,7 @@ function yaw(speed) {
         }
         yaw_speed = Math.abs(speed);
         console.log("CMD: yaw at speed: {0}. Sensor={1}deg".format(yaw_speed, speed));
-        return client.counterClockwise(yaw_speed);
+        return client.clockwise(yaw_speed);
     }
 }
 
@@ -105,7 +105,7 @@ function roll(speed) {
         }
         roll_speed = Math.abs(speed);
         console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, speed));        
-        return client.right(roll_speed);
+        return client.left(roll_speed);
     }
     else {
         if (speed < MIN_ROLL) {
@@ -114,7 +114,7 @@ function roll(speed) {
         }
         roll_speed = Math.abs(speed);
         console.log("CMD: roll at speed: {0}. Sensor={1}deg.".format(roll_speed, speed));
-        return client.left(roll_speed);
+        return client.right(roll_speed);
     }
 }
 
